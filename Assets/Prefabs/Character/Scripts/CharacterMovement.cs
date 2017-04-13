@@ -18,7 +18,8 @@ public class CharacterMovement : MonoBehaviour {
 	float desiredLayerWeight;
 	Vector3 playerToMouse;
     StepSoundController stepSC;
-    public Camera fakeCamera;
+	public Transform rotationHelper;
+	public Transform floorPlane;
 
 	// Use this for initialization
 	void Start () {
@@ -71,12 +72,21 @@ public class CharacterMovement : MonoBehaviour {
         // Store the input axes.
         float h = Input.GetAxisRaw ("Horizontal");
 		float v = Input.GetAxisRaw ("Vertical");
+
+		Vector3 camForw = Vector3.ProjectOnPlane (Camera.main.transform.forward, floorPlane.up);
+		float angle = Vector3.Angle(camForw.normalized, transform.forward);
+		Vector3 cross = Vector3.Cross(transform.forward,camForw.normalized);
+		movement.Set (h, 0f, v);
+		movement = Quaternion.Euler (0f, angle * Mathf.Sign(cross.y), 0f) * movement;
+
 		// Turn the player to face the mouse cursor.
-		Turning ();
+		if (!Input.GetMouseButton (2)) {
+			Turning ();
+		}
 		// Move the player around the scene.
-		Move (h, v);
+		Move (movement.x, movement.z);
 		// Animate the player.
-		Animating (h, v);
+		Animating (movement.x, movement.z);
 	}
 
 	private void Move(float h, float v)
@@ -89,13 +99,8 @@ public class CharacterMovement : MonoBehaviour {
 
     private void Turning()
 	{
-        float mouseInput = Input.GetAxis("Mouse X");
-        Vector3 lookhere = new Vector3(0,mouseInput,0);
-        transform.Rotate(lookhere);
-        // Create a ray from the mouse cursor on screen in the direction of the camera.
-        /*camRay = fakeCamera.ScreenPointToRay(Input.mousePosition);
-        
-        // Perform the raycast and if it hits something on the floor layer...
+		camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
+		// Perform the raycast and if it hits something on the floor layer...
         if (Physics.Raycast(camRay, out floorHit, 200f, floorMask))
         {
             // Create a vector from the player to the point on the floor the raycast from the mouse hit.
@@ -106,11 +111,7 @@ public class CharacterMovement : MonoBehaviour {
 
             // Set the player's rotation to this new rotation.
             transform.rotation = Quaternion.LookRotation(playerToMouse);
-        }*/
-    }
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
-    {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
+        }
     }
 
     private void Animating(float h, float v)

@@ -25,53 +25,68 @@ public class SmoothFollow : MonoBehaviour {
 	public float rotationDamping = 3.0f;
 
 	public bool frontView = false;
-    //public Camera fakeCamera;
+	private simpleFollow simpleFollowComp;
 
     // Place the script in the Camera-Control group in the component menu
 	[AddComponentMenu("Camera-Control/Smooth Follow")]
-	
+
+	void Start() {
+		simpleFollowComp = GetComponent<simpleFollow> ();
+	}
+
 	void LateUpdate () {
-		// Early out if we don't have a target
-		if (!target) return;
-		Event e = Event.current;
-		if (Input.GetKey(KeyCode.LeftAlt)) {
-			distance = distanceAltDefault;
-			height = heightAltDefault;
-		} else {
-			distance = distanceDefault;
-			height = heightDefault;
+		if(Input.GetMouseButton(2))
+		{
+			// Early out if we don't have a target
+			if (!target) return;
+			Event e = Event.current;
+			if (Input.GetKey(KeyCode.LeftAlt)) {
+				distance = distanceAltDefault;
+				height = heightAltDefault;
+			} else {
+				distance = distanceDefault;
+				height = heightDefault;
+			}
+			// Calculate the current rotation angles
+			float wantedRotationAngle = target.eulerAngles.y + (frontView? 180 : 0);
+			float wantedHeight = target.position.y + height;
+			
+			float currentRotationAngle = transform.eulerAngles.y;
+			float currentHeight = transform.position.y;
+			
+			// Damp the rotation around the y-axis
+			currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
+			
+			// Damp the height
+			currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
+			
+			// Convert the angle into a rotation
+			var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
+
+	        // Set the position of the camera on the x-z plane to:
+	        // distance meters behind the target
+	        //fakeCamera.transform.position = target.position;
+
+	        transform.position = target.position;
+
+	        //fakeCamera.transform.position = Vector3.forward * distance;
+	        transform.position -= currentRotation * Vector3.forward * distance;
+
+	        //fakeCamera.transform.position = new Vector3(transform.position.x, wantedHeight, transform.position.z);
+	        // Set the height of the camera
+	        transform.position = new Vector3(transform.position.x,currentHeight,transform.position.z);
+			
+			// Always look at the target
+			transform.LookAt(target);
+	        //fakeCamera.transform.LookAt(target);
+			simpleFollowComp.UpdateOffsetToTarget();
+			Cursor.visible = false;
+			Cursor.lockState = CursorLockMode.Locked;
 		}
-		// Calculate the current rotation angles
-		float wantedRotationAngle = target.eulerAngles.y + (frontView? 180 : 0);
-		float wantedHeight = target.position.y + height;
-		
-		float currentRotationAngle = transform.eulerAngles.y;
-		float currentHeight = transform.position.y;
-		
-		// Damp the rotation around the y-axis
-		currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
-		
-		// Damp the height
-		currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
-		
-		// Convert the angle into a rotation
-		var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
 
-        // Set the position of the camera on the x-z plane to:
-        // distance meters behind the target
-        //fakeCamera.transform.position = target.position;
-
-        transform.position = target.position;
-
-        //fakeCamera.transform.position = Vector3.forward * distance;
-        transform.position -= currentRotation * Vector3.forward * distance;
-
-        //fakeCamera.transform.position = new Vector3(transform.position.x, wantedHeight, transform.position.z);
-        // Set the height of the camera
-        transform.position = new Vector3(transform.position.x,currentHeight,transform.position.z);
-		
-		// Always look at the target
-		transform.LookAt(target);
-        //fakeCamera.transform.LookAt(target);
+		if (Input.GetMouseButtonUp (2)) {
+			Cursor.visible = true;
+			Cursor.lockState = CursorLockMode.None;
+		}
 	}
 }
