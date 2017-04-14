@@ -1,7 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{0FEB1D50-E251-C2E5-00FE-E02614B1CEDA}") = "LightDemo", "Assembly-CSharp.csproj", "{E3E07F32-49B6-BD49-E3B9-59CA045DF1FA}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightDemo", "Assembly-CSharp.csproj", "{E3E07F32-49B6-BD49-E3B9-59CA045DF1FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
