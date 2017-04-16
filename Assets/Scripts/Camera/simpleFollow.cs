@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class simpleFollow : MonoBehaviour {
+public class SimpleFollow : MonoBehaviour {
 
 	public Transform target;
 	private Vector3 offsetToTarget;
