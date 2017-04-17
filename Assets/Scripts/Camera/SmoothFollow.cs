@@ -16,25 +16,41 @@ public class SmoothFollow : MonoBehaviour {
 	private float distance = 4.0f;
 	// the height we want the camera to be above the target
 	private float height = 6.0f;
-	// How much we 
+
+    private float maxDistance = 4.0f;
+    private float maxHeight = 6.0f;
+
 	public float heightDamping = 2.0f;
 	public float rotationDamping = 3.0f;
 
 	private Vector3 offsetToTarget;
+    private CharacterMovement characterMovementScript;
 
 	public void UpdateOffsetOnStart() 
 	{
 		offsetToTarget = transform.position - target.position;
-	}
+        characterMovementScript = target.GetComponent<CharacterMovement>();
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            FlushCamera();
+        }
+    }
 
 	void LateUpdate () 
 	{
 		if (!target) return;
 
-		if(Input.GetMouseButton(2))
+        if (Input.GetMouseButton(2) || characterMovementScript.backCamera)
 		{
+            UpdateCameraHeight();
 
-			distance = distanceDefault;
+            UpdateCameraDistance();
+
+            distance = distanceDefault;
 			height = heightDefault;
 
 			float wantedRotationAngle = target.eulerAngles.y;
@@ -58,9 +74,11 @@ public class SmoothFollow : MonoBehaviour {
 			transform.LookAt(target);
 
 			offsetToTarget = transform.position - target.position;
-
+            
 			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Locked;
+
+            Cursor.lockState = CursorLockMode.Locked;
+
 			return;
 		}
 
@@ -72,4 +90,46 @@ public class SmoothFollow : MonoBehaviour {
 
 		transform.position = target.position + offsetToTarget;
 	}
+
+    void UpdateCameraHeight()
+    {
+        float mouseInput = Input.GetAxis("Mouse Y") / 10.0f;
+
+        if (heightDefault > maxHeight)
+        {
+            heightDefault = maxHeight;
+        }
+        else if (heightDefault < 2.0f)
+        {
+            heightDefault = 2.0f;
+        }
+        else
+        {
+            heightDefault += mouseInput;
+        }
+    }
+
+    void UpdateCameraDistance()
+    {
+        float mouseInput = Input.mouseScrollDelta.y / 10.0f;
+
+        if (distanceDefault > maxDistance)
+        {
+            distanceDefault = maxDistance;
+        }
+        else if (distanceDefault < 1.0f)
+        {
+            distanceDefault = 1.0f;
+        }
+        else
+        {
+            distanceDefault -= mouseInput;
+        }
+    }
+
+    void FlushCamera()
+    {
+        distanceDefault = maxDistance;
+        heightDefault = maxHeight;
+    }
 }
