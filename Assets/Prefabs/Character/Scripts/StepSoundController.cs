@@ -15,21 +15,10 @@ public class StepSoundController : MonoBehaviour {
 	public AudioArray[] stepSounds;
 
     public AudioSource audioSource;
-
-    public Transform leftLeg;
-
-    public Transform rightLeg;
-
-    public float rayLength;
-	
-    void FixedUpdate()
-    {
-        
-    }
-	
+    
 	public void PlayTerrainStepSound() {
         audioSource.pitch = Random.Range(0.95f, 1.05f);
-        int textureId = TerrainSurface.GetMainTexture (this.transform.position);
+        int textureId = TerrainSurface.GetMainTexture (transform.position);
         if(!audioSource.isPlaying)
         {
             switch (textureId)

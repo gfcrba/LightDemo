@@ -3,23 +3,23 @@ using System.Collections;
 
 public class CharacterMovement : MonoBehaviour {
 	public float m_Damping = 0.15f;
-	public float speed = 6f;            // The speed that the player will move at.
 	public Animator anim;               // Reference to the animator component.
-	Vector3 movement;                   // The vector to store the direction of the player's movement.
-    Ray camRay;
-	int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
-	RaycastHit floorHit;
-	float camRayLength = 200f;          // The length of the ray from the camera into the scene.
-	int crouchAnimLayer;
-	int runAnimLayer;
-    int walkAnimLayer;
-    int currentAnimationLayer;
-    float currentLayerWeight;
-	float desiredLayerWeight;
-	Vector3 playerToMouse;
-    StepSoundController stepSC;
-	public Transform rotationHelper;
-	public Transform floorPlane;
+
+	private Vector3 movement;                   // The vector to store the direction of the player's movement.
+    
+	private Ray camRay;
+	private int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
+	private RaycastHit floorHit;
+	private Vector3 playerToMouse;
+
+	private int crouchAnimLayer;
+	private int runAnimLayer;
+    private int walkAnimLayer;
+    private int currentAnimationLayer;
+    private float currentLayerWeight;
+	private float desiredLayerWeight;
+
+    private StepSoundController stepSC;
 
 	// Use this for initialization
 	void Start () {
@@ -73,7 +73,7 @@ public class CharacterMovement : MonoBehaviour {
         float h = Input.GetAxisRaw ("Horizontal");
 		float v = Input.GetAxisRaw ("Vertical");
 
-		Vector3 camForw = Vector3.ProjectOnPlane (Camera.main.transform.forward, floorPlane.up);
+		Vector3 camForw = Vector3.ProjectOnPlane (Camera.main.transform.forward, Vector3.up);
 		float angle = Vector3.Angle(camForw.normalized, transform.forward);
 		Vector3 cross = Vector3.Cross(transform.forward,camForw.normalized);
 		movement.Set (h, 0f, v);
@@ -83,13 +83,14 @@ public class CharacterMovement : MonoBehaviour {
 		if (!Input.GetMouseButton (2)) {
 			Turning ();
 		}
-		// Move the player around the scene.
-		Move (movement.x, movement.z);
+
+		PlayStepSound ();
+
 		// Animate the player.
-		Animating (movement.x, movement.z);
+		MovementAnimation (movement.x, movement.z);
 	}
 
-	private void Move(float h, float v)
+	private void PlayStepSound()
 	{
 		if(anim.GetFloat("StepSound") > 0.95f)
         {
@@ -114,16 +115,10 @@ public class CharacterMovement : MonoBehaviour {
         }
     }
 
-    private void Animating(float h, float v)
+	private void MovementAnimation(float h, float v)
 	{
-		if (h != 0 || v != 0) {
-			anim.SetBool ("moving", true);
-			anim.SetFloat ("h", h, m_Damping, Time.deltaTime);
-			anim.SetFloat ("v", v, m_Damping, Time.deltaTime);
-		} else {
-			anim.SetBool ("moving", false);
-			anim.SetFloat ("h", 0f, m_Damping, Time.deltaTime);
-			anim.SetFloat ("v", 0f, m_Damping, Time.deltaTime);
-		}
+		anim.SetBool ("moving", (h != 0 || v != 0));
+		anim.SetFloat ("h", h, m_Damping, Time.deltaTime);
+		anim.SetFloat ("v", v, m_Damping, Time.deltaTime);
 	}
 }
