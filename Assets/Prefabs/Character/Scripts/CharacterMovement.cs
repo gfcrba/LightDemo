@@ -42,7 +42,8 @@ public class CharacterMovement : MonoBehaviour {
         } else {
             BlendAnimationLayers(walkAnimLayer);
         }
-	}
+        SwitchCameraMode();
+    }
 
     void BlendAnimationLayers(int newAnimationLayer)
     {
@@ -81,7 +82,7 @@ public class CharacterMovement : MonoBehaviour {
 		movement = Quaternion.Euler (0f, angle * Mathf.Sign(cross.y), 0f) * movement;
 
 		// Turn the player to face the mouse cursor.
-		if (!Input.GetMouseButton (2)) {
+		if (!backCamera) {
 			Turning ();
 		}
 
@@ -122,6 +123,25 @@ public class CharacterMovement : MonoBehaviour {
             // Set the player's rotation to this new rotation.
             transform.rotation = Quaternion.LookRotation(playerToMouse);
         }
+    }
+
+    private void SwitchCameraMode()
+    {
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            backCamera = !backCamera;
+            if (backCamera)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+        
     }
 
 	private void MovementAnimation(float h, float v)

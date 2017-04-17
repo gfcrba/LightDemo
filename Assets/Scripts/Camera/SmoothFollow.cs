@@ -20,6 +20,8 @@ public class SmoothFollow : MonoBehaviour {
     private float maxDistance = 4.0f;
     private float maxHeight = 6.0f;
 
+    private float rotationAngle = 0.0f;
+
 	public float heightDamping = 2.0f;
 	public float rotationDamping = 3.0f;
 
@@ -44,16 +46,28 @@ public class SmoothFollow : MonoBehaviour {
 	{
 		if (!target) return;
 
-        if (Input.GetMouseButton(2) || characterMovementScript.backCamera)
+        if (characterMovementScript.backCamera)
 		{
             UpdateCameraHeight();
 
             UpdateCameraDistance();
 
+            UpdateCameraRotation();
+
             distance = distanceDefault;
 			height = heightDefault;
 
-			float wantedRotationAngle = target.eulerAngles.y;
+            float wantedRotationAngle = 0.0f;
+
+            /*if (characterMovementScript.backCamera)
+            {
+                wantedRotationAngle = target.eulerAngles.y;
+            }
+            else
+            {*/
+                wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
+            //} 
+			
 			float wantedHeight = target.position.y + height;
 			
 			float currentRotationAngle = transform.eulerAngles.y;
@@ -74,26 +88,18 @@ public class SmoothFollow : MonoBehaviour {
 			transform.LookAt(target);
 
 			offsetToTarget = transform.position - target.position;
-            
-			Cursor.visible = false;
-
-            Cursor.lockState = CursorLockMode.Locked;
 
 			return;
 		}
 
-		if (Input.GetMouseButtonUp (2)) 
-		{
-			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
-		}
-
-		transform.position = target.position + offsetToTarget;
+        transform.position = target.position + offsetToTarget;
 	}
 
     void UpdateCameraHeight()
     {
         float mouseInput = Input.GetAxis("Mouse Y") / 10.0f;
+        if (Mathf.Abs(mouseInput) < 0.2f) mouseInput = 0.0f;
+        heightDefault += mouseInput;
 
         if (heightDefault > maxHeight)
         {
@@ -103,15 +109,19 @@ public class SmoothFollow : MonoBehaviour {
         {
             heightDefault = 2.0f;
         }
-        else
-        {
-            heightDefault += mouseInput;
-        }
+    }
+
+    void UpdateCameraRotation()
+    {
+        float mouseInput = Input.GetAxis("Mouse X") * rotationDamping;
+        rotationAngle = mouseInput;
     }
 
     void UpdateCameraDistance()
     {
         float mouseInput = Input.mouseScrollDelta.y / 10.0f;
+
+        distanceDefault -= mouseInput;
 
         if (distanceDefault > maxDistance)
         {
@@ -120,10 +130,6 @@ public class SmoothFollow : MonoBehaviour {
         else if (distanceDefault < 1.0f)
         {
             distanceDefault = 1.0f;
-        }
-        else
-        {
-            distanceDefault -= mouseInput;
         }
     }
 
