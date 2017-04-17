@@ -4,6 +4,7 @@ using System.Collections;
 public class CharacterMovement : MonoBehaviour {
 	public float m_Damping = 0.15f;
 	public Animator anim;               // Reference to the animator component.
+    public bool backCamera = false;
 
 	private Vector3 movement;                   // The vector to store the direction of the player's movement.
     
@@ -100,6 +101,14 @@ public class CharacterMovement : MonoBehaviour {
 
     private void Turning()
 	{
+        if(backCamera)
+        {
+            float mouseInput = Input.GetAxis("Mouse X");
+            Vector3 lookhere = new Vector3(0, mouseInput, 0);
+            transform.Rotate(lookhere);
+            return;
+        }
+
 		camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		// Perform the raycast and if it hits something on the floor layer...
         if (Physics.Raycast(camRay, out floorHit, 200f, floorMask))
