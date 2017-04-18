@@ -59,18 +59,12 @@ public class SmoothFollow : MonoBehaviour {
 
             float wantedRotationAngle = 0.0f;
 
-            /*if (characterMovementScript.backCamera)
-            {
-                wantedRotationAngle = target.eulerAngles.y;
-            }
-            else
-            {*/
-                wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
-            //} 
+            wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
 			
 			float wantedHeight = target.position.y + height;
 			
 			float currentRotationAngle = transform.eulerAngles.y;
+
 			float currentHeight = transform.position.y;
 			
 			currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);

@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject player;
 	public Camera gameCamera;
-	// Use this for initialization
-	void Start () 
+    // Use this for initialization
+    void Start () 
 	{
 		Object playerPrefab = Resources.Load (pathToPlayer);
 

@@ -18,8 +18,7 @@ public class CharacterMovement : MonoBehaviour {
     private int walkAnimLayer;
     private int currentAnimationLayer;
     private float currentLayerWeight;
-	private float desiredLayerWeight;
-
+	
     private StepSoundController stepSC;
 
 	// Use this for initialization
@@ -29,8 +28,7 @@ public class CharacterMovement : MonoBehaviour {
 		runAnimLayer = anim.GetLayerIndex ("Run");
         walkAnimLayer = anim.GetLayerIndex("Walk");
         currentLayerWeight = 0.0f;
-		desiredLayerWeight = 0.0f;
-        stepSC = GetComponent<StepSoundController>();
+		stepSC = GetComponent<StepSoundController>();
 	}
 
 	void Update()
