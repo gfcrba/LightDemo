@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
+public enum MovementType
+{
+    NoMovement,
+    Walk,
+    Run
+}
+
 public class CharacterMovement : MonoBehaviour {
 	public float m_Damping = 0.15f;
 	public Animator anim;               // Reference to the animator component.
@@ -13,57 +21,18 @@ public class CharacterMovement : MonoBehaviour {
 	private RaycastHit floorHit;
 	private Vector3 playerToMouse;
 
-	private int crouchAnimLayer;
-	private int runAnimLayer;
-    private int walkAnimLayer;
-    private int currentAnimationLayer;
-    private float currentLayerWeight;
-	
     private StepSoundController stepSC;
+    private MovementType moveType;
 
 	// Use this for initialization
 	void Start () {
 		floorMask = LayerMask.GetMask ("Floor"); 
-		crouchAnimLayer = anim.GetLayerIndex ("Crouch");
-		runAnimLayer = anim.GetLayerIndex ("Run");
-        walkAnimLayer = anim.GetLayerIndex("Walk");
-        currentLayerWeight = 0.0f;
 		stepSC = GetComponent<StepSoundController>();
 	}
 
 	void Update()
 	{
-        if (Input.GetKey (KeyCode.LeftShift)) {
-            BlendAnimationLayers(crouchAnimLayer);
-        } else if (Input.GetKey (KeyCode.LeftControl)) {
-            BlendAnimationLayers(runAnimLayer);
-        } else {
-            BlendAnimationLayers(walkAnimLayer);
-        }
         SwitchCameraMode();
-    }
-
-    void BlendAnimationLayers(int newAnimationLayer)
-    {
-        if(currentAnimationLayer != newAnimationLayer)
-        {
-            currentAnimationLayer = newAnimationLayer;
-            currentLayerWeight = 0.0f;
-        } else if(currentLayerWeight < 1.0f)
-        {
-            currentLayerWeight = Mathf.Lerp(currentLayerWeight, 1.0f, Time.deltaTime * 2f);
-        }
-
-        for(int i = 0; i < anim.layerCount; i++)
-        {
-            if(currentAnimationLayer == i)
-            {
-                anim.SetLayerWeight(i, currentLayerWeight);
-            } else
-            {
-                anim.SetLayerWeight(i, Mathf.Lerp(anim.GetLayerWeight(i),0.0f, Time.deltaTime*2f));
-            }
-        }
     }
 
 	// Update is called once per frame
@@ -83,18 +52,17 @@ public class CharacterMovement : MonoBehaviour {
 		if (!backCamera) {
 			Turning ();
 		}
-
-		PlayStepSound ();
-
-		// Animate the player.
-		MovementAnimation (movement.x, movement.z);
-	}
+       
+        // Animate the player.
+        MovementAnimation (movement.x, movement.z);
+        PlayStepSound();
+    }
 
 	private void PlayStepSound()
 	{
 		if(anim.GetFloat("StepSound") > 0.95f)
         {
-            stepSC.PlayTerrainStepSound();
+            stepSC.PlayTerrainStepSound(moveType);
         }
 	}
 
@@ -144,8 +112,24 @@ public class CharacterMovement : MonoBehaviour {
 
 	private void MovementAnimation(float h, float v)
 	{
-		anim.SetBool ("moving", (h != 0 || v != 0));
-		anim.SetFloat ("h", h, m_Damping, Time.deltaTime);
+        if(h != 0 || v != 0)
+        {
+            if(Input.GetKey(KeyCode.LeftControl))
+            {
+                moveType = MovementType.Run;
+            }
+            else
+            {
+                moveType = MovementType.Walk;
+            } 
+        }
+        else
+        {
+            moveType = MovementType.NoMovement;
+        } 
+		anim.SetBool("running", (h != 0 || v != 0) && Input.GetKey(KeyCode.LeftControl));
+        anim.SetBool("walking", (h != 0 || v != 0) && !Input.GetKey(KeyCode.LeftControl));
+        anim.SetFloat ("h", h, m_Damping, Time.deltaTime);
 		anim.SetFloat ("v", v, m_Damping, Time.deltaTime);
 	}
 }

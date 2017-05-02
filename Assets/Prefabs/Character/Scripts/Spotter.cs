@@ -11,11 +11,15 @@ public class Spotter : MonoBehaviour {
 	public Transform leftArm;
 	public float defaultGlowDistance = 2.0f;
 	public float defaultGlowHeight = 3.0f;
-	public float defaultGlowAngle = 25.0f;
+	public float defaultGlowAngle = 45.0f;
 	public uint rayCount;
 	private Color startColor;
 	private Ray[] glowRay;
 	private RaycastHit[] info;
+    [HideInInspector]
+    public bool focused = false;
+    [HideInInspector]
+    public Vector3 focusTo;
     [Range(0,1)]
     public float glowAlphaAngle = Mathf.PI/6.0f;
     
@@ -36,7 +40,7 @@ public class Spotter : MonoBehaviour {
 	void FixedUpdate()
 	{
 		armConnection ();
-		moveGlowToCollision ();
+		moveGlowToCollision (); 
 	}
 
 	void Update () 
@@ -44,8 +48,18 @@ public class Spotter : MonoBehaviour {
 		if (Input.GetKeyUp("r")) {
 			toggleLight();
 		}
+        Vector3 newDir;
+        if (!focused)
+        {
+            newDir = Vector3.RotateTowards(spotlight.transform.forward, GameManager.Instance().player.transform.forward, Time.deltaTime, 0.0F);
+        }
+        else
+        {
+            newDir = Vector3.RotateTowards(spotlight.transform.forward, focusTo, Time.deltaTime, 0.0F);
+        }
 
-	}
+        spotlight.transform.rotation = Quaternion.LookRotation(newDir);
+    }
 
 	void toggleLight()
 	{
@@ -60,29 +74,32 @@ public class Spotter : MonoBehaviour {
 
 	void armConnection()
 	{
-		this.transform.position = leftArm.position;//Vector3.SmoothDamp(this.transform.position, leftArm.position, ref velocity, smoothTime);
-        //this.transform.rotation = leftArm.rotation;//Quaternion.Slerp (this.transform.rotation, leftArm.rotation, Time.deltaTime); 
-
+		this.transform.position = leftArm.position;
     }
 
 	void moveGlowToCollision()
 	{
-		float angle = -defaultGlowAngle;
+        
+        float angle = -90f;
 		for (int i = 0; i < rayCount; i++) 
 		{
-			glowRay[i].origin = spotlight.transform.position;
-			glowRay[i].direction = Quaternion.Euler(0.0f, angle, 0.0f) * spotlight.transform.forward;
-			angle += (2 * defaultGlowAngle) / rayCount;
-		}
+            Vector3 p1 = spotlight.transform.forward * spotlight.range;
+            float radius = spotlight.range * Mathf.Sin(Mathf.Deg2Rad * spotlight.spotAngle / 2.0f);
+            Vector3 v1 = p1;
+            Vector3 v2 = spotlight.transform.up * radius;
+            glowRay[i].origin = spotlight.transform.position;
+			glowRay[i].direction = v1 + Quaternion.AngleAxis(angle, v1) * v2;
+            angle -= defaultGlowAngle;
+        }
 		for (int i = 0; i < rayCount; i++) {
 			Physics.Raycast (glowRay[i], out info[i]);
+            Debug.DrawLine(glowRay[i].origin, info[i].point, Color.cyan);
 		}
+        
 		Vector3 pos = calculateMiddleVector3 ();
-        float distance = (pos - spotlight.transform.position).magnitude;
-        pos.y = calculateGlowHeight(distance);
-		spotlightGlow.transform.position = Vector3.Slerp(spotlightGlow.transform.position, pos, Time.deltaTime * 10);
-		Debug.DrawLine(spotlight.transform.position, pos);
-	}
+        spotlightGlow.transform.position = Vector3.Slerp(spotlightGlow.transform.position, pos, Time.deltaTime * 10);
+		//Debug.DrawLine(spotlight.transform.position, pos, Color.red);
+    }
 
 	Vector3 calculateMiddleVector3() 
 	{
@@ -90,7 +107,7 @@ public class Spotter : MonoBehaviour {
 		for (var i = 0; i < rayCount; i++) {
 			ret += info[i].point;
 		}
-        //ret = Vector3.ClampMagnitude(ret, ret.magnitude - glowDistanceMultiplier);
+        
         return ret / rayCount;
 	}
 
