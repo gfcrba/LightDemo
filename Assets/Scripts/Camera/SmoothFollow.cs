@@ -42,17 +42,17 @@ public class SmoothFollow : MonoBehaviour {
         }
     }
 
-	void LateUpdate () 
+    /*void LateUpdate () 
 	{
 		if (!target) return;
         //FadeBlockingGameobject();
-        if (characterMovementScript.backCamera)
+        //if (characterMovementScript.backCamera)
 		{
-            UpdateCameraHeight();
+            //UpdateCameraHeight();
 
-            UpdateCameraDistance();
+            //UpdateCameraDistance();
 
-            UpdateCameraRotation();
+            //UpdateCameraRotation();
 
             distance = distanceDefault;
 			height = heightDefault;
@@ -86,11 +86,52 @@ public class SmoothFollow : MonoBehaviour {
 			return;
 		}
 
-        transform.position = target.position + offsetToTarget;
+        //transform.position = target.position + offsetToTarget;
 
         
 
-	}
+	}*/
+
+    void LateUpdate()
+    {
+        // Early out if we don't have a target
+        if (!target) return;
+        Event e = Event.current;
+        distance = distanceDefault;
+        height = heightDefault;
+        // Calculate the current rotation angles
+        float wantedRotationAngle = target.eulerAngles.y;
+        float wantedHeight = target.position.y + height;
+
+        float currentRotationAngle = transform.eulerAngles.y;
+        float currentHeight = transform.position.y;
+
+        // Damp the rotation around the y-axis
+        currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
+
+        // Damp the height
+        currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
+
+        // Convert the angle into a rotation
+        var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
+
+        // Set the position of the camera on the x-z plane to:
+        // distance meters behind the target
+        //fakeCamera.transform.position = target.position;
+
+        transform.position = target.position;
+
+        //fakeCamera.transform.position = Vector3.forward * distance;
+        transform.position -= currentRotation * Vector3.forward * distance;
+
+        //fakeCamera.transform.position = new Vector3(transform.position.x, wantedHeight, transform.position.z);
+        // Set the height of the camera
+        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+
+        // Always look at the target
+        transform.LookAt(target);
+        //fakeCamera.transform.LookAt(target);
+    }
 
     void FadeBlockingGameobject()
     {

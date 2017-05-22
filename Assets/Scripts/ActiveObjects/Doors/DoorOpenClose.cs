@@ -48,6 +48,7 @@ public class DoorOpenClose : ActiveObject
 
         if (!AllowStateChange)
         {
+            SendGameMessage("Сосайтен :(");
             return false;
         }
 
@@ -62,6 +63,11 @@ public class DoorOpenClose : ActiveObject
         }
 
         return true;
+    }
+
+    public override void DefaultMessage()
+    {
+        SendGameMessage(CurrentState == DoorState.Close? "Открыл." : "Закрыл.");
     }
 
 
