@@ -10,8 +10,25 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject player;
 	public Camera gameCamera;
-	// Use this for initialization
-	void Start () 
+
+    private static GameManager _Instance = null;
+
+    void Awake()
+    {
+        if(_Instance == null)
+        {
+            _Instance = this;
+        }
+        else if(_Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Use this for initialization
+    void Start () 
 	{
 		Object playerPrefab = Resources.Load (pathToPlayer);
 
@@ -26,4 +43,9 @@ public class GameManager : MonoBehaviour {
 		followScript.target = player.transform;
 		followScript.UpdateOffsetOnStart ();
 	}
+
+    public static GameManager Instance()
+    {
+        return _Instance;
+    }
 }

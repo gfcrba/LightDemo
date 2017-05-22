@@ -27,8 +27,8 @@ public class SmoothFollow : MonoBehaviour {
 
 	private Vector3 offsetToTarget;
     private CharacterMovement characterMovementScript;
-
-	public void UpdateOffsetOnStart() 
+    
+    public void UpdateOffsetOnStart() 
 	{
 		offsetToTarget = transform.position - target.position;
         characterMovementScript = target.GetComponent<CharacterMovement>();
@@ -45,7 +45,7 @@ public class SmoothFollow : MonoBehaviour {
 	void LateUpdate () 
 	{
 		if (!target) return;
-
+        //FadeBlockingGameobject();
         if (characterMovementScript.backCamera)
 		{
             UpdateCameraHeight();
@@ -59,18 +59,12 @@ public class SmoothFollow : MonoBehaviour {
 
             float wantedRotationAngle = 0.0f;
 
-            /*if (characterMovementScript.backCamera)
-            {
-                wantedRotationAngle = target.eulerAngles.y;
-            }
-            else
-            {*/
-                wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
-            //} 
+            wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
 			
 			float wantedHeight = target.position.y + height;
 			
 			float currentRotationAngle = transform.eulerAngles.y;
+
 			float currentHeight = transform.position.y;
 			
 			currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
@@ -93,11 +87,29 @@ public class SmoothFollow : MonoBehaviour {
 		}
 
         transform.position = target.position + offsetToTarget;
+
+        
+
 	}
+
+    void FadeBlockingGameobject()
+    {
+        Ray camRay = new Ray(transform.position, -offsetToTarget);
+        Debug.DrawRay(camRay.origin, camRay.direction * offsetToTarget.magnitude, Color.red);
+        RaycastHit hitInfo;
+        if(Physics.Raycast(camRay, out hitInfo, 300f))
+        {
+            ActiveObjectFader fader = hitInfo.collider.gameObject.GetComponent<ActiveObjectFader>();
+            if(fader)
+            {
+                fader.fade = true;
+            }
+        }
+    }
 
     void UpdateCameraHeight()
     {
-        float mouseInput = Input.GetAxis("Mouse Y") / 10.0f;
+        float mouseInput = -Input.GetAxis("Mouse Y") / 10.0f;
         if (Mathf.Abs(mouseInput) < 0.2f) mouseInput = 0.0f;
         heightDefault += mouseInput;
 

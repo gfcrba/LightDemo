@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
+
+
 
 public class StepSoundController : MonoBehaviour {
     [System.Serializable]
@@ -12,12 +16,26 @@ public class StepSoundController : MonoBehaviour {
         }
     }
 
-	public AudioArray[] stepSounds;
+    [System.Serializable]
+    public class DictOfMovementTypeSoundVolume : SerializableDictionary<MovementType, float> { }
+
+    public DictOfMovementTypeSoundVolume movementSoundVol;
+
+    public AudioArray[] stepSounds;
 
     public AudioSource audioSource;
-    
-	public void PlayTerrainStepSound() {
+
+    void Awake ()
+    {
+        movementSoundVol = new DictOfMovementTypeSoundVolume();
+        movementSoundVol.Add(MovementType.NoMovement, 0.0f);
+        movementSoundVol.Add(MovementType.Walk, 0.2f);
+        movementSoundVol.Add(MovementType.Run, 1.0f);
+    }
+
+	public void PlayTerrainStepSound(MovementType moveType) {
         audioSource.pitch = Random.Range(0.95f, 1.05f);
+        audioSource.volume = movementSoundVol[moveType];
         int textureId = TerrainSurface.GetMainTexture (transform.position);
         if(!audioSource.isPlaying)
         {
