@@ -47,17 +47,34 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\CameraFollow.cs" />
+     <Compile Include="Assets\Prefabs\Character\Scripts\CharacterControllerPhysics.cs" />
      <Compile Include="Assets\Prefabs\Character\Scripts\CharacterMovement.cs" />
+     <Compile Include="Assets\Prefabs\Character\Scripts\SpotlightIK.cs" />
      <Compile Include="Assets\Prefabs\Character\Scripts\Spotter.cs" />
      <Compile Include="Assets\Prefabs\Character\Scripts\StepSoundController.cs" />
+     <Compile Include="Assets\Prefabs\TestStuff\AnimatorScript.cs" />
+     <Compile Include="Assets\Scripts\ActiveObjectFader.cs" />
+     <Compile Include="Assets\Scripts\ActiveObjects\ActiveObject.cs" />
+     <Compile Include="Assets\Scripts\ActiveObjects\Doors\DoorOpenClose.cs" />
      <Compile Include="Assets\Scripts\Camera\SmoothFollow.cs" />
      <Compile Include="Assets\Scripts\Camera\simpleFollow.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameTrigger.cs" />
+     <Compile Include="Assets\Scripts\HighlighScript.cs" />
+     <Compile Include="Assets\Scripts\RenderMaterialFullscreen.cs" />
+     <Compile Include="Assets\Scripts\RoofTriggerObject.cs" />
      <Compile Include="Assets\Scripts\SceneLoader.cs" />
+     <Compile Include="Assets\Scripts\SerializableDictionary.cs" />
      <Compile Include="Assets\Scripts\Terrain\TerrainSurface.cs" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
+     <Compile Include="Assets\Scripts\TriggerObject.cs" />
+     <Compile Include="Assets\Scripts\VolumetricFog.cs" />
+     <Compile Include="Assets\Scripts\ZWriter.cs" />
+     <None Include="Assets\Shaders\VertexLit_Z.shader" />
+     <None Include="Assets\Shaders\Raymarch.shader" />
+     <None Include="Assets\Shaders\RenderDepth.shader" />
+     <None Include="Assets\Shaders\BInfiniteFog.shader" />
+     <None Include="Assets\Shaders\VolumetricFog.shader" />
+     <None Include="Assets\Shaders\LightDemoShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -72,9 +89,6 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
