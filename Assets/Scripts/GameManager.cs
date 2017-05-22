@@ -10,8 +10,10 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject player;
 	public Camera gameCamera;
+    public GameObject fakeCursor;
 
     private static GameManager _Instance = null;
+    public MsgControl msgControl;
 
     void Awake()
     {
@@ -37,15 +39,25 @@ public class GameManager : MonoBehaviour {
 			player = (GameObject) Instantiate (playerPrefab, transform);
 		}
 
+        player.GetComponent<FakeCursor>().cursor = fakeCursor.transform;
+
 		SceneManager.LoadScene(pathToScenePrefab, LoadSceneMode.Additive);
 
 		SmoothFollow followScript = gameCamera.GetComponent<SmoothFollow> ();
 		followScript.target = player.transform;
 		followScript.UpdateOffsetOnStart ();
-	}
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     public static GameManager Instance()
     {
         return _Instance;
+    }
+
+    public void ShowGameMsg(string msg)
+    {
+        msgControl.SetMessage(msg);
     }
 }

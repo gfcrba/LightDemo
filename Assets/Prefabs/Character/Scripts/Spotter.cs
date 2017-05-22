@@ -22,7 +22,9 @@ public class Spotter : MonoBehaviour {
     public Vector3 focusTo;
     [Range(0,1)]
     public float glowAlphaAngle = Mathf.PI/6.0f;
-    
+    private CharacterMovement charMove;
+
+    private float mouseInputAccum = 0.0f;
     // Use this for initialization
     void Start () {
 		startColor = playerHighlight.color;
@@ -33,7 +35,10 @@ public class Spotter : MonoBehaviour {
 		{
 			glowRay[i] = new Ray();
 		}
-	}
+
+        charMove = GameManager.Instance().player.GetComponent<CharacterMovement>();
+
+    }
 	
 	// Update is called once per frame
 
@@ -48,20 +53,41 @@ public class Spotter : MonoBehaviour {
 		if (Input.GetKeyUp("r")) {
 			toggleLight();
 		}
-        Vector3 newDir;
-        if (!focused)
-        {
-            newDir = Vector3.RotateTowards(spotlight.transform.forward, GameManager.Instance().player.transform.forward, Time.deltaTime, 0.0F);
-        }
-        else
-        {
-            newDir = Vector3.RotateTowards(spotlight.transform.forward, focusTo, Time.deltaTime, 0.0F);
-        }
+
+        float mouseInput = Input.GetAxis("Mouse Y");
+        mouseInputAccum += mouseInput / 40f;
+        mouseInputAccum = saturateInput(mouseInputAccum);
+        //float dist = moveToMinusOne(sturateDistance(charMove.playerToMouse.magnitude));
+
+        Vector3 playerForward = GameManager.Instance().player.transform.forward;
+
+        Vector3 newDir = Quaternion.AngleAxis(-35f * mouseInputAccum, GameManager.Instance().player.transform.right) * playerForward;
+        
 
         spotlight.transform.rotation = Quaternion.LookRotation(newDir);
     }
 
-	void toggleLight()
+    float saturateInput(float input)
+    {
+        if (input > 1f)
+        {
+            return 1f;
+        }
+        else if (input < -1f)
+        {
+            return -1f;
+        }
+
+        return input;
+        
+    }
+
+    float moveToMinusOne(float x)
+    {
+        return 2f * x - 1f;
+    }
+
+    void toggleLight()
 	{
 		if (spotlight.isActiveAndEnabled) {
 			spotlight.enabled = false;

@@ -49,9 +49,9 @@ public class CharacterMovement : MonoBehaviour {
 		movement = Quaternion.Euler (0f, angle * Mathf.Sign(cross.y), 0f) * movement;
 
 		// Turn the player to face the mouse cursor.
-		if (!backCamera) {
+		//if (!backCamera) {
 			Turning ();
-		}
+		//}
        
         // Animate the player.
         MovementAnimation (movement.x, movement.z);
@@ -68,7 +68,7 @@ public class CharacterMovement : MonoBehaviour {
 
     private void Turning()
 	{
-        if(backCamera)
+        //if(backCamera)
         {
             float mouseInput = Input.GetAxis("Mouse X");
             Vector3 lookhere = new Vector3(0, mouseInput, 0);
