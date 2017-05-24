@@ -6,9 +6,15 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: divan_bed
+    100004: Object001
     400000: //RootNode
+    400002: divan_bed
+    400004: Object001
     2300000: //RootNode
+    2300002: divan_bed
     3300000: //RootNode
+    3300002: divan_bed
     4300000: divan_bed
   materials:
     importMaterials: 1

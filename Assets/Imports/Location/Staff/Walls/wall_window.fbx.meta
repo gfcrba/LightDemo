@@ -6,10 +6,20 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: dirt_glass
+    100004: Wall_window_1.014
     400000: //RootNode
+    400002: dirt_glass
+    400004: Wall_window_1.014
     2300000: //RootNode
+    2300002: dirt_glass
+    2300004: Wall_window_1.014
     3300000: //RootNode
+    3300002: dirt_glass
+    3300004: Wall_window_1.014
     4300000: Wall_window_1.014
+    4300002: Object006
+    4300004: dirt_glass
   materials:
     importMaterials: 1
     materialName: 0
