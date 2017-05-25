@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\ActiveObjectFader.cs" />
     <Compile Include="Assets\Scripts\ActiveObjects\ActiveObject.cs" />
     <Compile Include="Assets\Scripts\ActiveObjects\Doors\DoorOpenClose.cs" />
+    <Compile Include="Assets\Scripts\ActiveObjects\FoodMachine\FoodMachineActiveObject.cs" />
     <Compile Include="Assets\Scripts\Camera\SmoothFollow.cs" />
     <Compile Include="Assets\Scripts\Camera\simpleFollow.cs" />
     <Compile Include="Assets\Scripts\FakeCursor.cs" />

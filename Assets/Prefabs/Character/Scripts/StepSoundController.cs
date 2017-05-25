@@ -34,8 +34,9 @@ public class StepSoundController : MonoBehaviour {
     }
 
 	public void PlayTerrainStepSound(MovementType moveType) {
-        audioSource.pitch = Random.Range(0.95f, 1.05f);
+        /*audioSource.pitch = Random.Range(0.95f, 1.05f);
         audioSource.volume = movementSoundVol[moveType];
+        
         int textureId = TerrainSurface.GetMainTexture (transform.position);
         if(!audioSource.isPlaying)
         {
@@ -54,6 +55,6 @@ public class StepSoundController : MonoBehaviour {
                     }
                     break;
             }
-        }
+        }*/
     }
 }
