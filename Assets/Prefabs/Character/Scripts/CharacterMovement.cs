@@ -127,8 +127,8 @@ public class CharacterMovement : MonoBehaviour {
         {
             moveType = MovementType.NoMovement;
         } 
-		anim.SetBool("running", (h != 0 || v != 0) && Input.GetKey(KeyCode.LeftControl));
-        anim.SetBool("walking", (h != 0 || v != 0) && !Input.GetKey(KeyCode.LeftControl));
+		anim.SetBool("running", (h != 0 || v != 0) && Input.GetKey(KeyCode.LeftShift));
+        anim.SetBool("walking", (h != 0 || v != 0) && !Input.GetKey(KeyCode.LeftShift));
         anim.SetFloat ("h", h, m_Damping, Time.deltaTime);
 		anim.SetFloat ("v", v, m_Damping, Time.deltaTime);
 	}
