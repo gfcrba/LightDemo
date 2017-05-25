@@ -113,23 +113,24 @@ public class SmoothFollow : MonoBehaviour {
         currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
 
         // Convert the angle into a rotation
-        var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
+        var currentRotation = Quaternion.Euler(transform.eulerAngles.x, currentRotationAngle, -transform.eulerAngles.z);
 
         // Set the position of the camera on the x-z plane to:
         // distance meters behind the target
         //fakeCamera.transform.position = target.position;
 
-        transform.position = target.position;
+        //transform.position = target.position;
 
         //fakeCamera.transform.position = Vector3.forward * distance;
-        transform.position -= currentRotation * Vector3.forward * distance;
+        //transform.position -= currentRotation * Vector3.forward * distance;
 
         //fakeCamera.transform.position = new Vector3(transform.position.x, wantedHeight, transform.position.z);
         // Set the height of the camera
-        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
-
+        //transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+        transform.rotation = currentRotation;
+        transform.position = target.position + currentRotation * offsetToTarget;
         // Always look at the target
-        transform.LookAt(target);
+        //transform.LookAt(target);
         //fakeCamera.transform.LookAt(target);
     }
 
