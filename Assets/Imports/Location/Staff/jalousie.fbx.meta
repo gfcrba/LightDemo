@@ -1,24 +1,15 @@
 fileFormatVersion: 2
-guid: 94d08215d1562da4886f6a9a266ec25b
-timeCreated: 1484631921
+guid: fc216d594daeebf4585da359f8a8d3f3
+timeCreated: 1495702278
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: cooler
-    100004: dirt_glas
     400000: //RootNode
-    400002: cooler
-    400004: dirt_glas
     2300000: //RootNode
-    2300002: cooler
-    2300004: dirt_glas
     3300000: //RootNode
-    3300002: cooler
-    3300004: dirt_glas
-    4300000: cooler
-    4300002: dirt_glas
+    4300000: jalousie
   materials:
     importMaterials: 1
     materialName: 0
