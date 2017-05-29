@@ -6,10 +6,19 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: cooler
+    100004: dirt_glas
     400000: //RootNode
+    400002: cooler
+    400004: dirt_glas
     2300000: //RootNode
+    2300002: cooler
+    2300004: dirt_glas
     3300000: //RootNode
+    3300002: cooler
+    3300004: dirt_glas
     4300000: cooler
+    4300002: dirt_glas
   materials:
     importMaterials: 1
     materialName: 0
