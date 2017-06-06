@@ -4,8 +4,6 @@ using System.Collections;
 public class Spotter : MonoBehaviour {
 	public Light spotlight;
 	public Light spotlightGlow;
-	private Light leftSpotlightGlow;
-	private Light rightSpotlightGlow;
 	public Light playerHighlight;
 	public Color hideColor;
 	public Transform leftArm;
@@ -22,8 +20,9 @@ public class Spotter : MonoBehaviour {
     public Vector3 focusTo;
     [Range(0,1)]
     public float glowAlphaAngle = Mathf.PI/6.0f;
-    private CharacterMovement charMove;
-
+    public Transform lightCone;
+    private Vector3 defaultConeScale;
+   
     private float mouseInputAccum = 0.0f;
     // Use this for initialization
     void Start () {
@@ -35,9 +34,7 @@ public class Spotter : MonoBehaviour {
 		{
 			glowRay[i] = new Ray();
 		}
-
-        charMove = GameManager.Instance().player.GetComponent<CharacterMovement>();
-
+        defaultConeScale = lightCone.localScale;
     }
 	
 	// Update is called once per frame
@@ -45,7 +42,7 @@ public class Spotter : MonoBehaviour {
 	void FixedUpdate()
 	{
 		armConnection ();
-		moveGlowToCollision (); 
+		moveGlowToCollision ();
 	}
 
 	void Update () 
@@ -53,12 +50,13 @@ public class Spotter : MonoBehaviour {
 		if (Input.GetKeyUp("r")) {
 			toggleLight();
 		}
-
-        float mouseInput = Input.GetAxis("Mouse Y");
-        mouseInputAccum += mouseInput / 40f;
-        mouseInputAccum = saturateInput(mouseInputAccum);
-        //float dist = moveToMinusOne(sturateDistance(charMove.playerToMouse.magnitude));
-
+        if(!GameManager.Instance().freeCursor)
+        {
+            float mouseInput = Input.GetAxis("Mouse Y");
+            mouseInputAccum += mouseInput / 40f;
+            mouseInputAccum = saturateInput(mouseInputAccum);
+        }
+        
         Vector3 playerForward = GameManager.Instance().player.transform.forward;
 
         Vector3 newDir = Quaternion.AngleAxis(-35f * mouseInputAccum, GameManager.Instance().player.transform.right) * playerForward;
@@ -80,11 +78,6 @@ public class Spotter : MonoBehaviour {
 
         return input;
         
-    }
-
-    float moveToMinusOne(float x)
-    {
-        return 2f * x - 1f;
     }
 
     void toggleLight()
@@ -117,13 +110,19 @@ public class Spotter : MonoBehaviour {
 			glowRay[i].direction = v1 + Quaternion.AngleAxis(angle, v1) * v2;
             angle -= defaultGlowAngle;
         }
-		for (int i = 0; i < rayCount; i++) {
+		for (int i = 0; i < rayCount; i++)
+        {
 			Physics.Raycast (glowRay[i], out info[i]);
-            Debug.DrawLine(glowRay[i].origin, info[i].point, Color.cyan);
-		}
+            /*Debug.DrawLine(glowRay[i].origin, info[i].point, Color.cyan);
+            if (info[i].transform.tag == "Enemy")
+            {
+                info[i].transform.SendMessage("HitByTorch", gameObject, SendMessageOptions.DontRequireReceiver);
+            }*/
+        }
         
 		Vector3 pos = calculateMiddleVector3 ();
         spotlightGlow.transform.position = Vector3.Slerp(spotlightGlow.transform.position, pos, Time.deltaTime * 10);
+        calculateLightConeSize(pos);
 		//Debug.DrawLine(spotlight.transform.position, pos, Color.red);
     }
 
@@ -133,12 +132,45 @@ public class Spotter : MonoBehaviour {
 		for (var i = 0; i < rayCount; i++) {
 			ret += info[i].point;
 		}
-        
+        //Debug.DrawRay(spotlight.transform.position, spotlight.transform.forward * 10, Color.red);
+        //return calcStandardDeviation() + spotlight.transform.position;
         return ret / rayCount;
 	}
+
+    Vector3 calcStandardDeviation()
+    {
+        float ret = 0f;
+        float middleDist = 0f;
+        for (var i = 0; i < rayCount; i++)
+        {
+            middleDist += info[i].distance;
+        }
+        middleDist = middleDist / rayCount;
+        Debug.Log("Средняя длинна " + middleDist);
+        for (var i = 0; i < rayCount; i++)
+        {
+            ret += Mathf.Pow(info[i].distance - middleDist, 2f);
+        }
+        ret = ret / rayCount;
+        ret = Mathf.Sqrt(ret);
+        Debug.Log("Средняя кв длинна " + ret);
+
+        return spotlight.transform.forward * (middleDist - ret);
+    }
 
     float calculateGlowHeight(float distance)
     {
         return Mathf.Abs(distance*Mathf.Sin(glowAlphaAngle));
+    }
+
+    void calculateLightConeSize(Vector3 pos)
+    {
+        float range = (pos - spotlight.transform.position).magnitude;
+        float scaleAmount = range / spotlight.range;
+        if(scaleAmount > 0)
+        {
+            lightCone.localScale = defaultConeScale * scaleAmount;
+        }
+        
     }
 }

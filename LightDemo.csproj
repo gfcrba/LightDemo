@@ -88,11 +88,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CameraFollow.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\AttackState.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\DefaultState.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\EnemyAI.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\IdleState.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\PersuiteState.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\AI\SearchState.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\PlayerSensor.cs" />
+    <Compile Include="Assets\Prefabs\Character\Enemy\Scripts\TorchSensor.cs" />
     <Compile Include="Assets\Prefabs\Character\Scripts\CharacterControllerPhysics.cs" />
     <Compile Include="Assets\Prefabs\Character\Scripts\CharacterMovement.cs" />
+    <Compile Include="Assets\Prefabs\Character\Scripts\PlayerHealth.cs" />
     <Compile Include="Assets\Prefabs\Character\Scripts\SpotlightIK.cs" />
     <Compile Include="Assets\Prefabs\Character\Scripts\Spotter.cs" />
     <Compile Include="Assets\Prefabs\Character\Scripts\StepSoundController.cs" />
+    <Compile Include="Assets\Prefabs\Character\Scripts\TorchCam.cs" />
     <Compile Include="Assets\Prefabs\TestStuff\AnimatorScript.cs" />
     <Compile Include="Assets\Scripts\ActiveObjectFader.cs" />
     <Compile Include="Assets\Scripts\ActiveObjects\ActiveObject.cs" />
@@ -100,6 +110,7 @@
     <Compile Include="Assets\Scripts\ActiveObjects\FoodMachine\FoodMachineActiveObject.cs" />
     <Compile Include="Assets\Scripts\Camera\SmoothFollow.cs" />
     <Compile Include="Assets\Scripts\Camera\simpleFollow.cs" />
+    <Compile Include="Assets\Scripts\Events\EventManager.cs" />
     <Compile Include="Assets\Scripts\FakeCursor.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HighlighScript.cs" />
@@ -115,12 +126,14 @@
     <Compile Include="Assets\Scripts\UI\MsgControl.cs" />
     <Compile Include="Assets\Scripts\VolumetricFog.cs" />
     <Compile Include="Assets\Scripts\ZWriter.cs" />
+    <Compile Include="Assets\SelectRandomAttack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\BInfiniteFog.shader" />
-    <None Include="Assets\Shaders\LightDemoShader.shader" />
     <None Include="Assets\Shaders\Raymarch.shader" />
     <None Include="Assets\Shaders\RenderDepth.shader" />
+    <None Include="Assets\Shaders\TorchLightShader.shader" />
+    <None Include="Assets\Shaders\TorchLightShader2.shader" />
     <None Include="Assets\Shaders\VertexLit_Z.shader" />
     <None Include="Assets\Shaders\VolumetricFog.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

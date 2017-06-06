@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     private static GameManager _Instance = null;
     public MsgControl msgControl;
 
+    public bool freeCursor = false;
+
     void Awake()
     {
         if(_Instance == null)
@@ -51,13 +53,48 @@ public class GameManager : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+#if UNITY_EDITOR
+    void Update()
+    {
+        SwitchCursorMode();
+    }
+#endif
+
     public static GameManager Instance()
     {
         return _Instance;
     }
 
+    public bool PlayerInDistance(Vector3 position, float distance)
+    {
+        float distanceToPlayer = (player.transform.position - position).magnitude;
+        if (distanceToPlayer <= distance)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public void ShowGameMsg(string msg)
     {
         msgControl.SetMessage(msg);
+    }
+
+    private void SwitchCursorMode()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            freeCursor = !freeCursor;
+            if (!freeCursor)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
     }
 }

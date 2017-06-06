@@ -12,26 +12,20 @@ public class SmoothFollow : MonoBehaviour {
 	public float distanceDefault = 4.0f;
 	// the height we want the camera to be above the target
 	public float heightDefault = 6.0f;
-	// The distance in the x-z plane to the target
-	private float distance = 4.0f;
 	// the height we want the camera to be above the target
 	private float height = 6.0f;
 
     private float maxDistance = 4.0f;
     private float maxHeight = 6.0f;
 
-    private float rotationAngle = 0.0f;
-
-	public float heightDamping = 2.0f;
+    public float heightDamping = 2.0f;
 	public float rotationDamping = 3.0f;
 
 	private Vector3 offsetToTarget;
-    private CharacterMovement characterMovementScript;
     
     public void UpdateOffsetOnStart() 
 	{
 		offsetToTarget = transform.position - target.position;
-        characterMovementScript = target.GetComponent<CharacterMovement>();
     }
 
     void Update()
@@ -42,62 +36,11 @@ public class SmoothFollow : MonoBehaviour {
         }
     }
 
-    /*void LateUpdate () 
-	{
-		if (!target) return;
-        //FadeBlockingGameobject();
-        //if (characterMovementScript.backCamera)
-		{
-            //UpdateCameraHeight();
-
-            //UpdateCameraDistance();
-
-            //UpdateCameraRotation();
-
-            distance = distanceDefault;
-			height = heightDefault;
-
-            float wantedRotationAngle = 0.0f;
-
-            wantedRotationAngle = transform.eulerAngles.y + rotationAngle;
-			
-			float wantedHeight = target.position.y + height;
-			
-			float currentRotationAngle = transform.eulerAngles.y;
-
-			float currentHeight = transform.position.y;
-			
-			currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
-			
-			currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
-			
-			var currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
-
-	        transform.position = target.position;
-
-	        transform.position -= currentRotation * Vector3.forward * distance;
-
-	        transform.position = new Vector3(transform.position.x,currentHeight,transform.position.z);
-			
-			transform.LookAt(target);
-
-			offsetToTarget = transform.position - target.position;
-
-			return;
-		}
-
-        //transform.position = target.position + offsetToTarget;
-
-        
-
-	}*/
-
     void LateUpdate()
     {
         // Early out if we don't have a target
         if (!target) return;
         Event e = Event.current;
-        distance = distanceDefault;
         height = heightDefault;
         // Calculate the current rotation angles
         float wantedRotationAngle = target.eulerAngles.y;
@@ -163,12 +106,6 @@ public class SmoothFollow : MonoBehaviour {
         {
             heightDefault = 2.0f;
         }
-    }
-
-    void UpdateCameraRotation()
-    {
-        float mouseInput = Input.GetAxis("Mouse X") * rotationDamping;
-        rotationAngle = mouseInput;
     }
 
     void UpdateCameraDistance()

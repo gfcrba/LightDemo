@@ -8,11 +8,14 @@ public class GameTrigger : MonoBehaviour {
 	
     void OnTriggerEnter(Collider other)
     {
-        for (int i = objects.Count - 1; i >= 0; i--)
+        if(other.tag == "Player")
         {
-            if(objects[i].OnGameTrigger())
+            for (int i = objects.Count - 1; i >= 0; i--)
             {
-                objects.RemoveAt(i);
+                if (objects[i].OnGameTrigger())
+                {
+                    objects.RemoveAt(i);
+                }
             }
         }
     }

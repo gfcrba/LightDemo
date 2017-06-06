@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterControllerPhysics : MonoBehaviour {
 
     public float pushPower = 2.0F;
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Rigidbody body = hit.collider.attachedRigidbody;
