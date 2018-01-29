@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Camera/SmoothFollow.cs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="Assets/Prefabs/Character/Scripts/CharacterMovement.cs" Line="76" Column="45" />
-      <File FileName="Assets/Prefabs/Character/Scripts/StepSoundController.cs" Line="21" Column="56" />
-      <File FileName="Assets/Scripts/Camera/SmoothFollow.cs" Line="24" Column="2" />
+      <File FileName="Assets/Prefabs/Character/Scripts/CharacterMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets/Prefabs/Character/Scripts/StepSoundController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Camera/SmoothFollow.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
